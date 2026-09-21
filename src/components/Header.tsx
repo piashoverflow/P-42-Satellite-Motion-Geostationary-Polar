@@ -1,148 +1,147 @@
 import React from 'react';
-import { Play, Pause, RotateCcw, Satellite, Gauge, ShieldAlert, Search, Sparkles } from 'lucide-react';
-import { P42Mode } from '../types';
+import { PresetMode, Language } from '../types';
+import { t } from '../utils/i18n';
+import { 
+  Satellite, 
+  BookOpen, 
+  RotateCcw, 
+  GraduationCap, 
+  Globe, 
+  Compass, 
+  Radio, 
+  Sparkles,
+  Search
+} from 'lucide-react';
 
 interface HeaderProps {
-  mode: P42Mode;
-  setMode: (mode: P42Mode) => void;
-  isRunning: boolean;
-  setIsRunning: (running: boolean | ((prev: boolean) => boolean)) => void;
+  language: Language;
+  onToggleLanguage: () => void;
+  preset: PresetMode;
+  onSelectPreset: (preset: PresetMode) => void;
+  onOpenTheory: () => void;
   onReset: () => void;
-  speed: number;
-  setSpeed: (speed: number) => void;
-  showMath: boolean;
-  setShowMath: (show: boolean | ((prev: boolean) => boolean)) => void;
-  lang: 'en' | 'bn';
-  setLang: (lang: 'en' | 'bn') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  mode,
-  setMode,
-  isRunning,
-  setIsRunning,
+  language,
+  onToggleLanguage,
+  preset,
+  onSelectPreset,
+  onOpenTheory,
   onReset,
-  speed,
-  setSpeed,
-  showMath,
-  setShowMath,
-  lang,
-  setLang,
 }) => {
-  const modes = [
+  const tabs: { id: PresetMode; label: string; icon: React.ReactNode }[] = [
     {
-      id: 'geostationary_vs_polar' as P42Mode,
-      labelEn: 'Geostationary vs. Polar',
-      labelBn: 'ভূ-স্থির (BS-1) ও মেরু উপগ্রহ',
-      icon: Satellite,
+      id: 'geostationary_bs1',
+      label: t(language, 'tabGeo'),
+      icon: <Radio className="w-3.5 h-3.5" />,
     },
     {
-      id: 'satellite_kinematics_energy' as P42Mode,
-      labelEn: 'Orbital Velocity & Energies',
-      labelBn: 'কক্ষীয় বেগ (v) ও মোট শক্তি',
-      icon: Gauge,
+      id: 'polar_satellite',
+      label: t(language, 'tabPolar'),
+      icon: <Compass className="w-3.5 h-3.5" />,
     },
     {
-      id: 'weightlessness_lab' as P42Mode,
-      labelEn: 'Orbital Weightlessness Lab',
-      labelBn: 'মহাশূন্যে ওজনহীনতার কারণ',
-      icon: ShieldAlert,
+      id: 'orbital_mechanics',
+      label: t(language, 'tabOrbital'),
+      icon: <Satellite className="w-3.5 h-3.5" />,
     },
     {
-      id: 'resource_exploration_gravimetry' as P42Mode,
-      labelEn: 'Resource Gravimetry (Δg)',
-      labelBn: 'প্রাকৃতিক সম্পদ অনুসন্ধান (Δg)',
-      icon: Search,
+      id: 'weightlessness',
+      label: t(language, 'tabWeightless'),
+      icon: <Sparkles className="w-3.5 h-3.5" />,
+    },
+    {
+      id: 'mineral_exploration',
+      label: t(language, 'tabMineral'),
+      icon: <Search className="w-3.5 h-3.5" />,
     },
   ];
 
   return (
-    <header className="bg-slate-900/90 border-b border-teal-500/20 backdrop-blur-md sticky top-0 z-40 px-4 py-3">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-        {/* Title */}
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+      <div className="max-w-[1780px] mx-auto px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-3">
+        {/* Left: Brand Identity */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-500/25">
-            <Satellite className="w-6 h-6 text-white animate-spin-slow" />
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-700 flex items-center justify-center text-white shadow-md shadow-indigo-600/20 ring-2 ring-indigo-500/20">
+            <Satellite className="w-5 h-5 animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 text-xs font-bold font-mono bg-teal-500/20 text-teal-300 rounded border border-teal-500/30">
+              <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-none">
+                {t(language, 'brandTitle')}
+              </h1>
+              <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
                 P-42
               </span>
-              <h1 className="text-lg font-bold text-white tracking-wide">
-                {lang === 'bn' ? 'কৃত্রিম উপগ্রহের গতি, ভূ-স্থির স্যাটেলাইট ও মহাকর্ষের ব্যবহার' : 'Satellite Dynamics, Geostationary Orbits & Gravimetry'}
-              </h1>
             </div>
-            <p className="text-xs text-slate-400 font-mono">
-              {lang === 'bn'
-                ? 'বঙ্গবন্ধু স্যাটেলাইট-১ (৩৬,০০০ km) • মেরু উপগ্রহ • মুক্ত পতনে ওজনহীনতা • মহাকর্ষীয় এনোমালি (Δg)'
-                : "Bangabandhu Satellite-1 (h ≈ 36,000 km) • Polar Mapping • Weightlessness in Free Fall • Gravimetry Anomaly"}
+            <p className="text-[11px] font-medium text-slate-500 mt-0.5 flex items-center gap-1.5">
+              <span>{language === 'bn' ? 'এইচএসসি পদার্থবিজ্ঞান ১ম পত্র • অধ্যায় ৬' : 'HSC Physics 1st Paper • Chapter 6'}</span>
+              <span className="text-slate-300">•</span>
+              <span className="font-semibold text-indigo-700 uppercase">
+                {t(language, 'brandSubtitle')}
+              </span>
             </p>
           </div>
         </div>
 
-        {/* Mode Selector */}
-        <div className="flex items-center bg-slate-950/80 p-1 rounded-xl border border-slate-800 gap-1 overflow-x-auto max-w-full">
-          {modes.map((m) => {
-            const Icon = m.icon;
-            const active = mode === m.id;
+        {/* Center: Module Navigation Pills */}
+        <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-2xl border border-slate-200/60 overflow-x-auto max-w-full">
+          {tabs.map((tab) => {
+            const isActive = preset === tab.id;
             return (
               <button
-                key={m.id}
-                onClick={() => setMode(m.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
-                  active
-                    ? 'bg-teal-500 text-slate-950 font-bold shadow-md shadow-teal-500/30'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                key={tab.id}
+                onClick={() => onSelectPreset(tab.id)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                  isActive
+                    ? 'bg-white text-indigo-800 shadow-xs border border-slate-200/80 font-black'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{lang === 'bn' ? m.labelBn : m.labelEn}</span>
+                {tab.icon}
+                <span>{tab.label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Controls */}
-        <div className="flex items-center gap-2">
+        {/* Right: Theory, Language Toggle & Udvash Badge */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Theory Modal Trigger */}
           <button
-            onClick={() => setIsRunning((p) => !p)}
-            className={`p-2 rounded-lg text-white font-medium flex items-center gap-1 transition-all ${
-              isRunning
-                ? 'bg-amber-500 hover:bg-amber-600 shadow-md'
-                : 'bg-emerald-500 hover:bg-emerald-600 shadow-md'
-            }`}
-            title={isRunning ? 'Pause' : 'Start'}
+            onClick={onOpenTheory}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+            title="Theory and Mathematical Derivations"
           >
-            {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            <BookOpen className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{t(language, 'theoryButton')}</span>
           </button>
 
+          {/* Language Switcher */}
+          <button
+            onClick={onToggleLanguage}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold transition-colors cursor-pointer"
+            title="Toggle Language (BN / EN)"
+          >
+            <Globe className="w-3.5 h-3.5 text-slate-500" />
+            <span className="uppercase">{language === 'bn' ? 'EN' : 'বাংলা'}</span>
+          </button>
+
+          {/* Reset View */}
           <button
             onClick={onReset}
-            className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"
-            title="Reset"
+            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200 transition-colors cursor-pointer"
+            title="Reset Simulation"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3.5 h-3.5" />
           </button>
 
-          <button
-            onClick={() => setShowMath((p) => !p)}
-            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-              showMath
-                ? 'bg-purple-600/30 text-purple-300 border-purple-500/50 shadow-sm'
-                : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:border-slate-600'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-            <span>{lang === 'bn' ? 'গাণিতিক সূত্র' : 'Math Equations'}</span>
-          </button>
-
-          <button
-            onClick={() => setLang(lang === 'en' ? 'bn' : 'en')}
-            className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-amber-400"
-          >
-            {lang === 'en' ? 'বাংলা' : 'EN'}
-          </button>
+          {/* Udvash Branding Badge */}
+          <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 bg-red-50 border border-red-200 rounded-xl text-[11px] font-black text-red-700">
+            <GraduationCap className="w-3.5 h-3.5 text-red-600" />
+            <span>{t(language, 'udvashBadge')}</span>
+          </div>
         </div>
       </div>
     </header>
