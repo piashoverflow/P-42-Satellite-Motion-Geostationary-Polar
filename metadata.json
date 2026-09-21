@@ -1,0 +1,6 @@
+{
+  "name": "P-42: Satellite Motion, Geostationary Orbits & Gravimetry",
+  "description": "Interactive physics simulation of satellite orbital kinematics, Bangabandhu Satellite-1, polar orbits, orbital weightlessness, and gravimetric resource exploration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
