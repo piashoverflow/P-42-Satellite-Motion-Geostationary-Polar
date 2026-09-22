@@ -497,7 +497,7 @@ export const MotionCanvas: React.FC<MotionCanvasProps> = ({
         ctx.fill();
 
         // Continents / Green Landmasses with Earth spin
-        const spinAngle = params.earthRotationActive ? telemetry.elapsedTime * 0.05 : 0;
+        const spinAngle = params.earthRotationActive ? telemetry.elapsedTime * 0.18 : 0;
         ctx.save();
         ctx.beginPath();
         ctx.arc(cx, cy, earthR, 0, Math.PI * 2);
@@ -546,9 +546,9 @@ export const MotionCanvas: React.FC<MotionCanvasProps> = ({
           // Fixed relative to Earth slot!
           satTheta = spinAngle + 1.2; // locked with Bangladesh slot!
         } else if (params.preset === 'polar_satellite') {
-          satTheta = telemetry.elapsedTime * 0.4;
+          satTheta = telemetry.elapsedTime * 0.65;
         } else {
-          satTheta = telemetry.elapsedTime * (telemetry.orbitalSpeedKmS / 7.91) * 0.25;
+          satTheta = telemetry.elapsedTime * (telemetry.orbitalSpeedKmS / 7.91) * 0.5;
         }
 
         let satX = cx;
